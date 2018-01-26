@@ -1,0 +1,24 @@
+# this file is a Home-Assistant Package ready to use.
+# https://home-assistant.io/docs/configuration/packages/
+homeassistant:
+  customize:
+    switch.curtains_01:
+      icon: mdi:blinds
+
+switch:
+- platform: mqtt
+  name: "Curtains 01"
+  state_topic: "/MQTTCurtains/control/"
+  command_topic: "/MQTTCurtains/state/"
+  payload_on: "ON"
+  payload_off: "OFF"
+  optimistic: true
+  retain: true
+
+group:
+  mqtt_curtains:
+   name: 'Curtains'
+   control: hidden
+   view: false
+   entities:
+   - switch.curtains_01

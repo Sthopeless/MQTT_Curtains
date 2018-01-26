@@ -48,12 +48,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   p[length] = NULL;
   String message(p);
   String mytopic(topic);
+  
   if (mytopic == mqtt_command && message == cmnd_off) {
     myservo.attach(servo_port);
     Serial.println(closing_msg);
     delay(msg_delay_off);
     myservo.write(servo_write_off);
-    client.publish(mqtt_state, cmnd_off);
+    //client.publish(mqtt_state, cmnd_off);
     delay(spintime_off);
     myservo.detach();
   }
@@ -63,7 +64,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println(opening_msg);
     delay(msg_delay_on);
     myservo.write(servo_write_on);
-    client.publish(mqtt_state, cmnd_on);
+    //client.publish(mqtt_state, cmnd_on);
     delay(spintime_on);
     myservo.detach();
   }
@@ -84,7 +85,7 @@ void reconnect() {
       client.subscribe(mqtt_command);
       } else {
       Serial.print("failed, rc=");
-      Serial.print(client.state());
+      //Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
       delay(5000);
     }

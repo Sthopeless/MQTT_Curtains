@@ -54,7 +54,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println(closing_msg);
     delay(msg_delay_off);
     myservo.write(servo_write_off);
-    //client.publish(mqtt_state, cmnd_off);
+    client.publish(mqtt_state, cmnd_off);
     delay(spintime_off);
     myservo.detach();
   }
@@ -64,8 +64,28 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println(opening_msg);
     delay(msg_delay_on);
     myservo.write(servo_write_on);
-    //client.publish(mqtt_state, cmnd_on);
+    client.publish(mqtt_state, cmnd_on);
     delay(spintime_on);
+    myservo.detach();
+  }
+  
+  if (mytopic == mqtt_babysteps && message == babysteps_on) {
+    myservo.attach(servo_port);
+    Serial.println(baby_opening_msg);
+    delay(msg_delay_on);
+    myservo.write(servo_write_on);
+    //client.publish(mqtt_state, cmnd_on);
+    delay(baby_spintime_on);
+    myservo.detach();
+  }
+    
+  if (mytopic == mqtt_babysteps && message == babysteps_off) {
+    myservo.attach(servo_port);
+    Serial.println(baby_closing_msg);
+    delay(msg_delay_off);
+    myservo.write(servo_write_off);
+    //client.publish(mqtt_state, cmnd_on);
+    delay(baby_spintime_off);
     myservo.detach();
   }
 }
@@ -82,10 +102,11 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     if (client.connect(mqtt_client, mqtt_user, mqtt_password)) {
       Serial.println("connected");
-      client.subscribe(mqtt_command);
+      client.subscribe(mqtt_command);   
+      client.subscribe(mqtt_babysteps);
       } else {
       Serial.print("failed, rc=");
-      //Serial.print(client.state());
+      Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
       delay(5000);
     }
